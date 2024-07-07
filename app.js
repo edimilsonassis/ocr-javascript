@@ -15,7 +15,7 @@ async function work() {
     for (let i = files.files.length - 1; i >= 0; i--) {
         const file = files.files[i];
         const ret = await worker.recognize(file);
-        result.innerHTML += `${ret.data.text.replaceAll(`\n`, ' ')}\n\n`;
+        result.value += `${ret.data.text.replaceAll(`\n`, ' ')}\n\n`;
         progress.innerHTML = `Processado ${files.files.length - i} de ${files.files.length}`;
     }
 
@@ -29,7 +29,7 @@ async function work() {
 files.addEventListener('change', work);
 
 save.addEventListener('click', () => {
-    const blob = new Blob([result.innerHTML], { type: 'text/plain' });
+    const blob = new Blob([result.value], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -38,8 +38,10 @@ save.addEventListener('click', () => {
 });
 
 document.addEventListener('paste', async (e) => {
+    console.log('paste');
+
     if (e.clipboardData.files.length) {
-        result.innerHTML = '';
+        result.value = '';
         files.files = e.clipboardData.files;
         await work();
     }
@@ -47,18 +49,20 @@ document.addEventListener('paste', async (e) => {
     if (e.clipboardData.types.indexOf('text/plain') > -1) {
         let newText = e.clipboardData.getData('text/plain');
 
+        console.log(newText);
+
         // newText = newText.replaceAll('IV ', '');
         // newText = newText.replaceAll('III ', '');
         // newText = newText.replaceAll('II ', '');
         // newText = newText.replaceAll('I ', '');
         // newText = newText.replaceAll('V ', '');
 
-        if (result.innerHTML == newText) {
+        if (result.value == newText) {
             console.log('igual');
             newText = newText.replaceAll(`\n`, ' ');
         }
 
-        result.innerHTML = newText;
+        result.value = newText;
         result.dispatchEvent(new Event('change'));
     }
 });
@@ -109,7 +113,9 @@ class Speaker {
             li.querySelector('p').innerHTML = text;
 
             li.onclick = (e) => {
-                if (e.target.tagName === 'SVG' && e.target.tagName === 'BUTTON')
+                let tagName = e.target.tagName.toUpperCase();
+
+                if (tagName != 'P' && tagName != 'LI')
                     return;
 
                 this.itemToRead = index;
@@ -123,8 +129,9 @@ class Speaker {
 
             buttonRemove.onclick = () => {
                 this.texts.splice(index, 1);
-                this.fillListItems();
+                // this.fillListItems();
                 result.value = this.texts.join('\n');
+                li.remove();
             }
 
             this.list.appendChild(li);
@@ -228,3 +235,12 @@ tabLinks.forEach(tab => {
 
 fillselvoices();
 setTimeout(fillselvoices, 100);
+
+window.addEventListener('beforeunload', function (e) {
+    if (synth.speaking) {
+        synth.cancel();
+        return;
+    }
+    e.preventDefault();
+    e.returnValue
+})
