@@ -104,7 +104,6 @@ class Speaker {
     }
 
     fillListItems() {
-
         this.list.innerHTML = '';
 
         this.texts.forEach((text, index) => {
@@ -129,9 +128,8 @@ class Speaker {
 
             buttonRemove.onclick = () => {
                 this.texts.splice(index, 1);
-                // this.fillListItems();
                 result.value = this.texts.join('\n');
-                li.remove();
+                result.dispatchEvent(new Event('change'));
             }
 
             this.list.appendChild(li);
@@ -140,7 +138,6 @@ class Speaker {
 
     add(text) {
         this.texts = text.replaceAll('\n', '|').split('|').filter(e => e.trim());
-
         this.fillListItems();
     }
 
@@ -183,6 +180,7 @@ class Speaker {
 const synth = new Speaker();
 
 result.addEventListener('change', () => {
+    // synth.cancel();
     synth.add(result.value);
     synth.itemToRead = 0;
 });

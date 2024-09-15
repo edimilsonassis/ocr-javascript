@@ -10,6 +10,17 @@ body {
   color: white;
 }
 
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
 input,
 textarea,
 select {
