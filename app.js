@@ -124,9 +124,20 @@ class Speaker {
                 this.speak();
             }
 
-            const buttonRemove = li.querySelector('button')
+            const buttonMerge = li.querySelector('[name="merge"]')
+            const buttonRemove = li.querySelector('[name="remove"]')
 
             buttonRemove.onclick = () => {
+                this.texts.splice(index, 1);
+                result.value = this.texts.join('\n');
+                result.dispatchEvent(new Event('change'));
+            }
+
+            buttonMerge.onclick = () => {
+                if (index == this.texts.length - 1)
+                    return;
+
+                this.texts[index + 1] = this.texts[index] + ' ' + this.texts[index + 1];
                 this.texts.splice(index, 1);
                 result.value = this.texts.join('\n');
                 result.dispatchEvent(new Event('change'));
@@ -137,7 +148,10 @@ class Speaker {
     }
 
     add(text) {
-        this.texts = text.replaceAll('\n', '|').split('|').filter(e => e.trim());
+        this.texts = text.replaceAll('\n', '|').split('|').filter((value) => {
+            value = value.trim();
+            return !value.match(/Alternativa \d+/);
+        });
         this.fillListItems();
     }
 

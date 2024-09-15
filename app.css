@@ -51,21 +51,40 @@ ul {
     border-bottom: 1px solid #444;
     border-radius: 5px;
 
-    button {
-      position: absolute;
-      border-radius: 50%;
-      top: -12px;
-      left: -12px;
+    .buttons {
       opacity: 0;
-      padding: 5px;
+      display: flex;
+      gap: 14px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #444;
+      padding: 4px 10px;
 
-      svg {
-        width: 18px;
-        height: 18px;
-      }
+      button {
+        border-radius: 50%;
+        padding: 5px;
 
-      &:hover {
-        background-color: rgb(255, 99, 71);
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        &[name="remove"] {
+          background-color: rgb(255, 99, 71);
+
+          &:hover {
+            background-color: rgb(255, 69, 0);
+          }
+        }
+
+        &[name="merge"] {
+          background-color: rgb(0, 191, 255);
+
+          &:hover {
+            background-color: rgb(0, 171, 255);
+          }
+        }
       }
     }
 
@@ -73,7 +92,7 @@ ul {
       background-color: #444;
 
 
-      button {
+      .buttons {
         opacity: 1;
       }
     }
@@ -89,7 +108,8 @@ ul {
 @media (min-width: 768px) {
   .container {
     border-radius: 5px;
-    margin: 50px auto !important
+    margin: 50px auto !important;
+    margin-bottom: 150px;
   }
 
   body {
