@@ -150,6 +150,8 @@ class Speaker {
     add(text) {
         this.texts = text.replaceAll('\n', '|').split('|').filter((value) => {
             value = value.trim();
+            if (!value)
+                return false;
             return !value.match(/Alternativa \d+/);
         });
         this.fillListItems();
